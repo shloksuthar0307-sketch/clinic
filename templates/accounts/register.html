@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block body %}
+<div class="min-h-screen flex relative overflow-hidden bg-white dark:bg-darkbg">
+    <!-- Abstract background shape -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 z-10 w-full lg:w-1/2">
+        <div class="mx-auto w-full max-w-md lg:w-[28rem] fade-in">
+            <div>
+                <a href="{% url 'root' %}" class="flex items-center gap-2 font-bold text-2xl text-primary">
+                    <i data-lucide="activity" class="h-8 w-8"></i>
+                    <span>Pulse<span class="text-gray-900 dark:text-white">Med</span></span>
+                </a>
+                <h2 class="mt-8 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Create your account</h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="font-medium text-primary hover:text-indigo-500 transition-colors">
+                        Sign in here
+                    </a>
+                </p>
+            </div>
+
+            <div class="mt-8 slide-up">
+                <form action="{% url 'register' %}" method="POST" class="space-y-5">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm border border-red-100 dark:border-red-900/50 flex items-start gap-2">
+                        <i data-lucide="alert-circle" class="h-5 w-5 shrink-0"></i>
+                        <span>{{ form.non_field_errors.0 }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Grid for Name -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">First Name</label>
+                            {% render_field form.first_name class="mt-1 appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all" %}
+                            {% if form.first_name.errors %}<p class="mt-1 text-xs text-red-500">{{ form.first_name.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Last Name</label>
+                            {% render_field form.last_name class="mt-1 appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all" %}
+                            {% if form.last_name.errors %}<p class="mt-1 text-xs text-red-500">{{ form.last_name.errors.0 }}</p>{% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                        {% render_field form.username class="mt-1 appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all" %}
+                        {% if form.username.errors %}<p class="mt-1 text-xs text-red-500">{{ form.username.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                        {% render_field form.email class="mt-1 appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all" %}
+                        {% if form.email.errors %}<p class="mt-1 text-xs text-red-500">{{ form.email.errors.0 }}</p>{% endif %}
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Clinic / Hospital Name</label>
+                        {% render_field form.clinic_name class="mt-1 appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all" %}
+                        {% if form.clinic_name.errors %}<p class="mt-1 text-xs text-red-500">{{ form.clinic_name.errors.0 }}</p>{% endif %}
+                    </div>
+
+                    <div x-data="{ show: false }">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                        <div class="mt-1 relative">
+                            <input :type="show ? 'text' : 'password'" name="password" required class="appearance-none block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all">
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500">
+                                <i x-show="!show" data-lucide="eye" class="h-4 w-4"></i>
+                                <i x-show="show" data-lucide="eye-off" class="h-4 w-4" x-cloak></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all transform hover:-translate-y-0.5">
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pattern side -->
+    <div class="hidden lg:block relative w-1/2 bg-gray-50 dark:bg-darkcard border-l border-gray-200 dark:border-gray-800">
+        <!-- Abstract pattern grid -->
+        <div class="absolute inset-0" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 32px 32px; opacity: 0.2;"></div>
+        <div class="absolute inset-0 flex flex-col justify-center items-center p-12 z-10 text-center">
+            <div class="p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20">
+                <i data-lucide="shield-check" class="h-16 w-16 text-primary mx-auto mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Secure by Default</h3>
+                <p class="mt-2 text-gray-600 dark:text-gray-400 max-w-sm">Your data is isolated, encrypted, and protected with enterprise-grade security.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

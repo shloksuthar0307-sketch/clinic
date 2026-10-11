@@ -1,0 +1,142 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}{% if prescription %}Edit{% else %}Create{% endif %} Prescription | PulseMed{% endblock %}
+
+{% block content %}
+<div class="space-y-6 fade-in" x-data="{ 
+    medicines: [
+        {% if prescription %}
+            {% for med in prescription.medicines.all %}
+                { id: {{ forloop.counter }}, name: '{{ med.name|escapejs }}' }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            {% if not prescription.medicines.all %}
+                { id: 1, name: '' }
+            {% endif %}
+        {% else %}
+            { id: 1, name: '' }
+        {% endif %}
+    ], 
+    addMedicine() { this.medicines.push({ id: Date.now(), name: '' }) },
+    removeMedicine(id) { this.medicines = this.medicines.filter(m => m.id !== id) }
+}">
+    
+    <div class="flex items-center gap-3">
+        <a href="{% url 'prescription_list' %}" class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <i data-lucide="arrow-left" class="h-5 w-5"></i>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{% if prescription %}Edit{% else %}New{% endif %} Prescription</h1>
+    </div>
+
+    <form method="POST" class="space-y-8 pb-12">
+        {% csrf_token %}
+        
+        <div class="relative z-20 bg-white dark:bg-darkcard border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm slide-up">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% if not prescription %}
+                <div x-data="{
+                    search: '',
+                    open: false,
+                    selectedId: '',
+                    patients: [
+                        {% for p in patients %}
+                        { id: '{{ p.pk }}', name: '{{ p.full_name|escapejs }} ({{ p.patient_id }})' }{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ],
+                    get filteredPatients() {
+                        if (this.search === '') return this.patients;
+                        const exactMatch = this.patients.find(p => p.name === this.search);
+                        if (exactMatch && this.selectedId == exactMatch.id) return this.patients;
+                        return this.patients.filter(p => p.name.toLowerCase().includes(this.search.toLowerCase()));
+                    },
+                    selectPatient(p) {
+                        this.selectedId = p.id;
+                        this.search = p.name;
+                        this.open = false;
+                    }
+                }" @click.outside="open = false">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Patient *</label>
+                    <input type="hidden" name="patient_id" :value="selectedId" required>
+                    
+                    <div class="relative">
+                        <input type="text" x-model="search" @focus="open = true" @input="open = true; selectedId = ''" 
+                               placeholder="Type to search patients..." autocomplete="off" required
+                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none transition-all shadow-sm">
+                        
+                        <i data-lucide="chevron-down" class="absolute right-3 top-3 h-4 w-4 text-gray-400 pointer-events-none"></i>
+                        
+                        <div x-show="open" x-cloak 
+                             class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-60 overflow-y-auto flex flex-col"
+                             x-transition>
+                            <div class="p-1">
+                                <template x-for="p in filteredPatients" :key="p.id">
+                                    <button type="button" @click="selectPatient(p)" 
+                                            class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-gray-700 dark:text-gray-200 transition-colors"
+                                            :class="{'bg-indigo-50 dark:bg-indigo-900/30 text-primary font-medium': selectedId == p.id}">
+                                        <span x-text="p.name"></span>
+                                    </button>
+                                </template>
+                                <div x-show="filteredPatients.length === 0" class="px-3 py-4 text-sm text-center text-gray-500">
+                                    No patients found matching your search.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Patient</label>
+                    <input type="text" disabled value="{{ prescription.visit.patient.full_name }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 cursor-not-allowed">
+                </div>
+                {% endif %}
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diagnosis</label>
+                    <input type="text" name="diagnosis" value="{% if prescription %}{{ prescription.visit.diagnosis }}{% endif %}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Prescription CRUD -->
+        <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm slide-up" style="animation-delay: 100ms;">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 rounded-lg">
+                        <i data-lucide="pill" class="h-5 w-5"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Prescription</h2>
+                </div>
+                <button type="button" @click="addMedicine()" class="text-sm font-medium text-primary hover:text-indigo-600 flex items-center gap-1">
+                    <i data-lucide="plus" class="h-4 w-4"></i> Add Medicine
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <template x-for="(medicine, index) in medicines" :key="medicine.id">
+                    <div class="flex flex-col md:flex-row gap-4 items-start p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 relative group">
+                        
+                        <button type="button" @click="removeMedicine(medicine.id)" x-show="medicines.length > 1" class="absolute -top-2 -right-2 bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400 rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="x" class="h-4 w-4"></i>
+                        </button>
+                        
+                        <div class="w-full">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Medicine Name</label>
+                            <input type="text" name="medicine_name[]" x-model="medicine.name" placeholder="e.g. Paracetamol 500mg, 2 times/day, 3 days, After food" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 text-sm outline-none">
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="flex justify-end gap-4 slide-up" style="animation-delay: 200ms;">
+            <a href="{% url 'prescription_list' %}" class="px-6 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors shadow-sm">
+                Cancel
+            </a>
+            <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-indigo-600 transition-all transform hover:-translate-y-0.5 shadow-sm flex items-center gap-2">
+                <i data-lucide="save" class="h-4 w-4"></i>
+                Save Prescription
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

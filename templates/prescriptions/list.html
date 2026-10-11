@@ -1,0 +1,76 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Prescriptions | PulseMed{% endblock %}
+
+{% block content %}
+<div class="space-y-6 fade-in">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Prescriptions</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Manage and edit all patient prescriptions.</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'prescription_create' %}" class="px-4 py-2 bg-primary text-white rounded-lg shadow-sm text-sm font-medium hover:bg-indigo-600 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                <i data-lucide="plus" class="h-4 w-4"></i>
+                Create Prescription
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden slide-up">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">Date</th>
+                        <th class="px-6 py-4 font-semibold">Patient</th>
+                        <th class="px-6 py-4 font-semibold">Diagnosis</th>
+                        <th class="px-6 py-4 font-semibold">Medicines</th>
+                        <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for p in prescriptions %}
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
+                        <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+                            {{ p.created_at|date:"M d, Y" }}
+                        </td>
+                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                            <a href="{% url 'patient_detail' p.visit.patient.pk %}" class="hover:text-primary transition-colors">{{ p.visit.patient.full_name }}</a>
+                        </td>
+                        <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+                            {{ p.visit.diagnosis }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                                {{ p.medicines.count }} medicines
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{% url 'prescription_detail' p.pk %}" class="p-2 text-gray-500 hover:text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors" title="View">
+                                    <i data-lucide="eye" class="h-4 w-4"></i>
+                                </a>
+                                <a href="{% url 'prescription_edit' p.pk %}" class="p-2 text-gray-500 hover:text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors" title="Edit">
+                                    <i data-lucide="edit-2" class="h-4 w-4"></i>
+                                </a>
+                                <form method="POST" action="{% url 'prescription_delete' p.pk %}" onsubmit="return confirm('Delete this prescription?');" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete">
+                                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">No prescriptions found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

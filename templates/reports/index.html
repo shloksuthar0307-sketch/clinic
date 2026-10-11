@@ -1,0 +1,61 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Analytics & Reports | PulseMed{% endblock %}
+
+{% block content %}
+<div class="space-y-6 fade-in">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Analytics</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Export your data and analyze your practice performance.</p>
+        </div>
+    </div>
+
+    <!-- Export Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 slide-up">
+        <!-- Patient Export -->
+        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+            <i data-lucide="users" class="h-8 w-8 mb-4 text-blue-100"></i>
+            <h3 class="text-xl font-bold mb-2">Patient Database</h3>
+            <p class="text-blue-100 text-sm mb-6 max-w-sm">Export a complete list of all your registered patients, including contact info, visit counts, and total revenue.</p>
+            <a href="{% url 'export_patients' %}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-600 rounded-xl font-semibold shadow-sm hover:bg-gray-50 transition-colors">
+                <i data-lucide="file-spreadsheet" class="h-5 w-5"></i>
+                Export to Excel
+            </a>
+        </div>
+        
+        <!-- Visits Export -->
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+            <i data-lucide="calendar" class="h-8 w-8 mb-4 text-emerald-100"></i>
+            <h3 class="text-xl font-bold mb-2">Visit History</h3>
+            <p class="text-emerald-100 text-sm mb-6 max-w-sm">Export a chronological log of every patient visit, diagnosis, consultation fee, and doctor notes.</p>
+            <a href="{% url 'export_visits' %}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-teal-600 rounded-xl font-semibold shadow-sm hover:bg-gray-50 transition-colors">
+                <i data-lucide="file-spreadsheet" class="h-5 w-5"></i>
+                Export to Excel
+            </a>
+        </div>
+    </div>
+    
+    <!-- Quick Analytics -->
+    <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm slide-up" style="animation-delay: 100ms;">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Lifetime Statistics</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Consultations</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ total_consultations }}</p>
+            </div>
+            <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Avg. Consultation Fee</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">₹{{ avg_price|floatformat:0 }}</p>
+            </div>
+            <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Best Revenue Day</p>
+                <p class="text-2xl font-bold text-green-500 mt-1">₹{{ highest_revenue_amount|floatformat:0 }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ highest_revenue_day|date:"M d, Y"|default:"-" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
