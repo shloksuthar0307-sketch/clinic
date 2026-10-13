@@ -39,16 +39,26 @@ def visit_create(request):
         
         Payment.objects.create(visit=visit, amount=consultation_fee)
         
-        # Medicines
+        # Medicines / Quick Prescription
+        prescription_text = request.POST.get('prescription_text') or request.POST.get('medicine_name') or ''
         medicine_names = request.POST.getlist('medicine_name[]')
-        if medicine_names and any(name.strip() for name in medicine_names):
+        
+        medicines_to_add = []
+        if prescription_text.strip():
+            for line in prescription_text.splitlines():
+                if line.strip():
+                    medicines_to_add.append(line.strip())
+        for name in medicine_names:
+            if name.strip():
+                medicines_to_add.append(name.strip())
+                
+        if medicines_to_add:
             prescription = Prescription.objects.create(visit=visit)
-            for name in medicine_names:
-                if name.strip():
-                    Medicine.objects.create(
-                        prescription=prescription,
-                        name=name.strip()
-                    )
+            for med_name in medicines_to_add:
+                Medicine.objects.create(
+                    prescription=prescription,
+                    name=med_name
+                )
                     
         return redirect('patient_detail', pk=patient.pk)
         

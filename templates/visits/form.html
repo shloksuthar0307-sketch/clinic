@@ -3,11 +3,7 @@
 {% block title %}Log Visit - {{ block.super }}{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6 fade-in" x-data="{ 
-    medicines: [ { id: 1, name: '' } ],
-    addMedicine() { this.medicines.push({ id: Date.now(), name: '' }) },
-    removeMedicine(id) { this.medicines = this.medicines.filter(m => m.id !== id) }
-}">
+<div class="max-w-4xl mx-auto space-y-6 fade-in">
     
     <div class="flex items-center gap-3">
         <a href="javascript:history.back()" class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
@@ -110,32 +106,21 @@
 
         <!-- Section: Quick Prescription -->
         <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm slide-up" style="animation-delay: 100ms;">
-            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 rounded-lg">
-                        <i data-lucide="pill" class="h-5 w-5"></i>
-                    </div>
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Quick Prescription (Optional)</h2>
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                <div class="p-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 rounded-lg">
+                    <i data-lucide="pill" class="h-5 w-5"></i>
                 </div>
-                <button type="button" @click="addMedicine()" class="text-sm font-medium text-primary hover:text-indigo-600 flex items-center gap-1">
-                    <i data-lucide="plus" class="h-4 w-4"></i> Add Medicine
-                </button>
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Quick Prescription (Optional)</h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Enter medicines and dosage (one per line)</p>
+                </div>
             </div>
             
-            <div class="space-y-4">
-                <template x-for="(medicine, index) in medicines" :key="medicine.id">
-                    <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 relative group">
-                        
-                        <button type="button" @click="removeMedicine(medicine.id)" x-show="medicines.length > 1" class="absolute -top-2 -right-2 bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400 rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                            <i data-lucide="x" class="h-4 w-4"></i>
-                        </button>
-                        
-                        <div class="w-full">
-                            <label class="block text-xs font-medium text-gray-500 mb-1">Medicine Name</label>
-                            <input type="text" name="medicine_name[]" x-model="medicine.name" placeholder="e.g. Paracetamol 500mg, 2 times/day, 3 days" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 text-sm outline-none">
-                        </div>
-                    </div>
-                </template>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Medicine Name</label>
+                <textarea name="prescription_text" rows="4" 
+                          placeholder="e.g. Paracetamol 500mg, 2 times/day, 3 days&#10;Amoxicillin 250mg, 3 times/day, 5 days" 
+                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 text-sm outline-none transition-all resize-y"></textarea>
             </div>
         </div>
 

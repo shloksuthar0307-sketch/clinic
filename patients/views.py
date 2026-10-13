@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Patient
 from visits.models import Visit, Payment
 from prescriptions.models import Prescription, Medicine
@@ -58,12 +59,12 @@ def add_patient(request):
             gender=request.POST.get('gender'),
             phone=request.POST.get('phone'),
 
-            # Optional medical info if any is still sent, but we can default to empty
-            blood_group='',
-            allergies='',
-            existing_conditions='',
-            medical_history='',
-            emergency_contact=''
+            # Optional medical info
+            blood_group=request.POST.get('blood_group', '').strip(),
+            allergies=request.POST.get('allergies', '').strip(),
+            existing_conditions=request.POST.get('existing_conditions', '').strip(),
+            medical_history=request.POST.get('medical_history', '').strip(),
+            emergency_contact=request.POST.get('emergency_contact', '').strip()
         )
         
         consultation_fee = request.POST.get('consultation_fee')
@@ -117,9 +118,45 @@ def patient_detail(request, pk):
     return render(request, 'patients/detail.html', context)
 
 @login_required
+def edit_patient(request, pk):
+    patient = get_object_or_404(Patient, pk=pk, doctor=request.user)
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name', '').strip()
+        if full_name:
+            patient.full_name = full_name
+            
+        age = request.POST.get('age')
+        if age:
+            try:
+                patient.age = int(age)
+            except ValueError:
+                pass
+                
+        gender = request.POST.get('gender')
+        if gender:
+            patient.gender = gender
+            
+        phone = request.POST.get('phone', '').strip()
+        if phone:
+            patient.phone = phone
+            
+        patient.blood_group = request.POST.get('blood_group', '').strip()
+        patient.emergency_contact = request.POST.get('emergency_contact', '').strip()
+        patient.allergies = request.POST.get('allergies', '').strip()
+        patient.existing_conditions = request.POST.get('existing_conditions', '').strip()
+        patient.medical_history = request.POST.get('medical_history', '').strip()
+        
+        patient.save()
+        messages.success(request, f"Patient {patient.full_name}'s profile has been updated successfully.")
+        return redirect('patient_detail', pk=patient.pk)
+        
+    return render(request, 'patients/edit.html', {'patient': patient})
+
+@login_required
 def delete_patient(request, pk):
     patient = get_object_or_404(Patient, pk=pk, doctor=request.user)
     if request.method == 'POST':
         patient.delete()
+        messages.success(request, 'Patient deleted successfully.')
         return redirect('patient_list')
     return redirect('patient_detail', pk=pk)

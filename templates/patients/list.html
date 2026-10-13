@@ -84,9 +84,14 @@
                             ₹{{ patient.total_paid|default:"0"|floatformat:0 }}
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{% url 'patient_detail' patient.pk %}" class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-indigo-600 transition-colors" onclick="event.stopPropagation()">
-                                View <i data-lucide="arrow-right" class="h-4 w-4"></i>
-                            </a>
+                            <div class="inline-flex items-center gap-3" onclick="event.stopPropagation()">
+                                <a href="{% url 'patient_detail' patient.pk %}" class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-indigo-600 transition-colors" title="View Profile">
+                                    View <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                                </a>
+                                <a href="{% url 'edit_patient' patient.pk %}" class="p-1 text-gray-400 hover:text-primary dark:hover:text-white transition-colors" title="Edit Patient">
+                                    <i data-lucide="edit-3" class="h-4 w-4"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
