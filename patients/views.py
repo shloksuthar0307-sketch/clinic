@@ -139,12 +139,10 @@ def edit_patient(request, pk):
         phone = request.POST.get('phone', '').strip()
         if phone:
             patient.phone = phone
-            
-        patient.blood_group = request.POST.get('blood_group', '').strip()
-        patient.emergency_contact = request.POST.get('emergency_contact', '').strip()
-        patient.allergies = request.POST.get('allergies', '').strip()
-        patient.existing_conditions = request.POST.get('existing_conditions', '').strip()
-        patient.medical_history = request.POST.get('medical_history', '').strip()
+        if 'emergency_contact' in request.POST:
+            patient.emergency_contact = request.POST.get('emergency_contact', '').strip()
+        if 'blood_group' in request.POST:
+            patient.blood_group = request.POST.get('blood_group', '').strip()
         
         patient.save()
         messages.success(request, f"Patient {patient.full_name}'s profile has been updated successfully.")

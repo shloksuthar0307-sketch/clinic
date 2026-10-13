@@ -74,32 +74,12 @@
             </div>
         </div>
 
-        {% if patient.emergency_contact or patient.allergies or patient.existing_conditions or patient.medical_history %}
-        <div class="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-            {% if patient.emergency_contact %}
+        {% if patient.emergency_contact %}
+        <div class="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800 text-sm">
             <div>
                 <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-1">Emergency Contact</span>
                 <span class="text-gray-900 dark:text-gray-200 font-medium">{{ patient.emergency_contact }}</span>
             </div>
-            {% endif %}
-            {% if patient.allergies %}
-            <div>
-                <span class="text-xs font-semibold text-red-500 dark:text-red-400 uppercase tracking-wider block mb-1">Allergies</span>
-                <span class="text-red-700 dark:text-red-300 font-medium">{{ patient.allergies }}</span>
-            </div>
-            {% endif %}
-            {% if patient.existing_conditions %}
-            <div>
-                <span class="text-xs font-semibold text-amber-500 dark:text-amber-400 uppercase tracking-wider block mb-1">Conditions</span>
-                <span class="text-gray-900 dark:text-gray-200 font-medium">{{ patient.existing_conditions }}</span>
-            </div>
-            {% endif %}
-            {% if patient.medical_history %}
-            <div class="sm:col-span-2 lg:col-span-1">
-                <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-1">Medical History</span>
-                <span class="text-gray-900 dark:text-gray-200 font-medium">{{ patient.medical_history }}</span>
-            </div>
-            {% endif %}
         </div>
         {% endif %}
     </div>

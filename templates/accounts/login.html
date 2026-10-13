@@ -78,14 +78,123 @@
             <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg">Manage patients, streamline prescriptions, and analyze your revenue all in one beautiful, lightning-fast interface.</p>
             
             <!-- Mockup dashboard preview -->
-            <div class="relative rounded-2xl bg-white dark:bg-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700 p-4 transform rotate-2 hover:rotate-0 transition-transform duration-500">
-                <div class="flex gap-2 mb-4">
-                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+            <div class="relative rounded-2xl bg-white dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl border border-gray-200 dark:border-gray-700/80 p-5 transform lg:rotate-1 hover:rotate-0 transition-transform duration-500 max-w-xl">
+                <!-- Window Titlebar -->
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                    </div>
+                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-[11px] font-medium text-gray-500 dark:text-gray-400">
+                        <i data-lucide="shield-check" class="h-3 w-3 text-emerald-500"></i>
+                        <span>pulsemed.app/dashboard</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Live
+                    </div>
                 </div>
-                <div class="h-32 bg-gray-100 dark:bg-gray-700 rounded-lg mb-2"></div>
-                <div class="h-8 w-2/3 bg-gray-100 dark:bg-gray-700 rounded-lg"></div>
+
+                <!-- Mini Stat Cards -->
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/50">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Patients</span>
+                            <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 rounded-full">+12%</span>
+                        </div>
+                        <p class="text-lg font-bold text-gray-900 dark:text-white">1,428</p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/50">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Visits Today</span>
+                            <span class="text-[10px] font-semibold text-primary bg-indigo-50 dark:bg-indigo-900/30 px-1.5 py-0.5 rounded-full">Active</span>
+                        </div>
+                        <p class="text-lg font-bold text-gray-900 dark:text-white">24</p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/50">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Revenue</span>
+                            <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 rounded-full">+18%</span>
+                        </div>
+                        <p class="text-lg font-bold text-gray-900 dark:text-white">₹38,500</p>
+                    </div>
+                </div>
+
+                <!-- Lower Mockup Area: Chart & Recent Patients -->
+                <div class="grid grid-cols-5 gap-3">
+                    <!-- Mini Revenue Chart Preview -->
+                    <div class="col-span-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/50 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <p class="text-[11px] font-semibold text-gray-900 dark:text-white">Weekly Inflow</p>
+                                <p class="text-[10px] text-gray-400">Past 7 days performance</p>
+                            </div>
+                            <span class="text-xs font-bold text-primary">₹1.84L</span>
+                        </div>
+                        <!-- Stylized SVG area chart -->
+                        <div class="relative h-20 w-full pt-1">
+                            <svg class="w-full h-full overflow-visible" viewBox="0 0 200 60" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.35"/>
+                                        <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.0"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- Grid Lines -->
+                                <line x1="0" y1="15" x2="200" y2="15" stroke="currentColor" class="text-gray-200 dark:text-gray-700/40" stroke-dasharray="2,2" stroke-width="1"/>
+                                <line x1="0" y1="40" x2="200" y2="40" stroke="currentColor" class="text-gray-200 dark:text-gray-700/40" stroke-dasharray="2,2" stroke-width="1"/>
+                                <!-- Area Fill -->
+                                <path d="M 0 50 Q 30 45, 60 30 T 120 22 T 160 12 T 200 8 L 200 60 L 0 60 Z" fill="url(#chartGrad)"/>
+                                <!-- Trend Line -->
+                                <path d="M 0 50 Q 30 45, 60 30 T 120 22 T 160 12 T 200 8" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round"/>
+                                <!-- Active Data Point -->
+                                <circle cx="200" cy="8" r="3.5" fill="#4f46e5" class="animate-ping" opacity="0.6"/>
+                                <circle cx="200" cy="8" r="3.5" fill="#4f46e5"/>
+                            </svg>
+                        </div>
+                        <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+                            <span>Mon</span>
+                            <span>Wed</span>
+                            <span>Fri</span>
+                            <span>Sun</span>
+                            <span class="font-bold text-primary">Today</span>
+                        </div>
+                    </div>
+
+                    <!-- Mini Recent Patients List -->
+                    <div class="col-span-2 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/50 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-[11px] font-semibold text-gray-900 dark:text-white">Live Queue</p>
+                            <i data-lucide="activity" class="h-3 w-3 text-primary"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between gap-1">
+                                <div class="truncate">
+                                    <p class="text-[11px] font-medium text-gray-800 dark:text-gray-200 truncate">Aarav Patel</p>
+                                    <p class="text-[9px] text-gray-400">Viral fever</p>
+                                </div>
+                                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 shrink-0">Paid</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-1">
+                                <div class="truncate">
+                                    <p class="text-[11px] font-medium text-gray-800 dark:text-gray-200 truncate">Priya Sharma</p>
+                                    <p class="text-[9px] text-gray-400">Prescription</p>
+                                </div>
+                                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:text-indigo-300 shrink-0">Rx Sent</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-1">
+                                <div class="truncate">
+                                    <p class="text-[11px] font-medium text-gray-800 dark:text-gray-200 truncate">Rohan Mehta</p>
+                                    <p class="text-[9px] text-gray-400">Consultation</p>
+                                </div>
+                                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 shrink-0">Paid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
